@@ -1,0 +1,680 @@
+CREATE TABLE Echipe (
+  ID_Echipa NUMBER PRIMARY KEY,
+  Nume VARCHAR2(100),
+  Tara VARCHAR2(100),
+  Antrenor VARCHAR2(100)
+);
+CREATE TABLE Jucatori (
+  ID_Jucator NUMBER PRIMARY KEY,
+  Nume VARCHAR2(100),
+  Prenume VARCHAR2(100),
+  Data_nasterii DATE,
+  Nationalitate VARCHAR2(100),
+  ID_Echipa NUMBER,
+  CONSTRAINT fk_jucatori_echipa FOREIGN KEY (ID_Echipa) REFERENCES Echipe (ID_Echipa)
+);
+CREATE TABLE Competitii (
+  ID_Competitie NUMBER PRIMARY KEY,
+  Nume VARCHAR2(100),
+  Tara VARCHAR2(100),
+  Sezon VARCHAR2(100),
+  Numar_etape NUMBER
+);  
+CREATE TABLE Echipe_Competitii (
+  ID_EchipaCompetitie NUMBER,
+  ID_Echipa NUMBER,
+  ID_Competitie NUMBER,
+  CONSTRAINT pk_echipe_competitii PRIMARY KEY (ID_EchipaCompetitie),
+  CONSTRAINT fk_echipe_competitii_echipa FOREIGN KEY (ID_Echipa) REFERENCES Echipe (ID_Echipa),
+  CONSTRAINT fk_echipe_competitii_comp FOREIGN KEY (ID_Competitie) REFERENCES Competitii (ID_Competitie)
+);
+
+
+CREATE TABLE Meciuri (
+  ID_Meci NUMBER PRIMARY KEY,
+  ID_Gazda NUMBER,
+  ID_Oaspete NUMBER,
+  ID_Competitie NUMBER,     
+  Data DATE,
+  Scor VARCHAR2(100),
+  CONSTRAINT fk_meciuri_echipa_gazda FOREIGN KEY (ID_Gazda) REFERENCES Echipe (ID_Echipa),
+  CONSTRAINT fk_meciuri_echipa_oaspete FOREIGN KEY (ID_Oaspete) REFERENCES Echipe (ID_Echipa),
+  CONSTRAINT fk_meciuri_competitie FOREIGN KEY (ID_Competitie) REFERENCES Competitii (ID_Competitie)
+);
+CREATE TABLE Goluri (
+  ID_Gol NUMBER PRIMARY KEY,
+  ID_Meci NUMBER,
+  ID_Jucator NUMBER,
+  Timpul_marcat NUMBER,
+  CONSTRAINT fk_goluri_meci FOREIGN KEY (ID_Meci) REFERENCES Meciuri (ID_Meci),
+  CONSTRAINT fk_goluri_jucator FOREIGN KEY (ID_Jucator) REFERENCES Jucatori (ID_Jucator)
+);
+
+
+CREATE TABLE Arbitri (
+  ID_Arbitru NUMBER PRIMARY KEY,
+  Nume VARCHAR2(100),
+  Prenume VARCHAR2(100),
+  Tara VARCHAR2(100),
+  ID_Meci NUMBER,
+  CONSTRAINT fk_arbitri_meciuri FOREIGN KEY (ID_Meci) REFERENCES Meciuri (ID_Meci)
+);
+CREATE TABLE Cartonase (
+  ID_Cartonas NUMBER PRIMARY KEY,
+  ID_Meci NUMBER,
+  ID_Jucator NUMBER,
+  Tip_cartonas VARCHAR2(100),
+  Timpul_acordarii NUMBER,
+  CONSTRAINT fk_cartonase_meci FOREIGN KEY (ID_Meci) REFERENCES Meciuri (ID_Meci),
+  CONSTRAINT fk_cartonase_jucator FOREIGN KEY (ID_Jucator) REFERENCES Jucatori (ID_Jucator)
+); 
+
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (1, 'Steaua Bucuresti', 'Romania', 'Daniel Oprita');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (2, 'Dinamo Bucuresti', 'Romania', 'Ovidiu Burca');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (3, 'Liverpool', 'Anglia', 'Jurgen Klopp');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (4, 'Manchester United', 'Anglia', 'Ole Gunnar Solskjaer');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (5, 'AC Milan', 'Italia', 'Paolo Maldini');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (6, 'NEC Nijmegen', 'Olanda', 'Frank De Boer');
+
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (7, 'Raja Cassablanca', 'Maroc', 'Zinedine Zidane');
+select * from echipe;
+
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (1, 'Chipirliu', 'Remus', TO_DATE('1984-06-15', 'YYYY-MM-DD'), 'Roman', 1);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (2, 'Mihaescu', 'Mihai', TO_DATE('1990-01-02', 'YYYY-MM-DD'), 'Roman', 1);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (3, 'Bani', 'Ahmed', TO_DATE('1999-10-10', 'YYYY-MM-DD'), 'Roman', 2);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (4, 'Salah', 'Mo', TO_DATE('1995-11-11', 'YYYY-MM-DD'), 'Egiptean', 3);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (5, 'Shaw', 'Luke', TO_DATE('1988-03-03', 'YYYY-MM-DD'), 'Englez', 4);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (6, 'Leao', 'Rafa', TO_DATE('1991-01-02', 'YYYY-MM-DD'), 'Portughez', 5);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (7, 'De Jong', 'Luuk', TO_DATE('1990-07-07', 'YYYY-MM-DD'), 'Olandez', 6);
+
+INSERT INTO Jucatori (ID_Jucator, Nume, Prenume, Data_nasterii, Nationalitate, ID_Echipa)
+VALUES (8, 'Hakimi', 'Achraf', TO_DATE('1992-02-02', 'YYYY-MM-DD'), 'Marocan', 7);
+
+select * from jucatori;
+
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (1, 'UEFA Champions League', 'Europa', '2021-2022', 8);
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (2, 'Premier League', 'Anglia', '2021-2022', 38);
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (3, 'Serie A', 'Italia', '2021-2022', 30);
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (4, 'Liga 2', 'Romania', '2021-2022', 50);
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (5, 'Eredivise', 'Olanda', '2022-2023', 34);
+
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (6, 'Botola Pro', 'Maroc', '2020-2021', 15);
+select * from competitii;
+
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (1, 3, 1);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (2, 4, 1);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (3, 5, 1);
+    
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (4, 3, 2);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (5, 4, 2);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (6, 1, 4);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (7, 2, 4);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (8, 5, 3);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (9, 6, 5);
+
+INSERT INTO Echipe_Competitii (ID_EchipaCompetitie, ID_Echipa, ID_Competitie)
+VALUES (10, 7, 6);
+
+select * from Echipe_Competitii;
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (1, 4, 6, 1, TO_DATE('2022-03-12', 'YYYY-MM-DD'), '4-4');
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (2, 3, 5, 1, TO_DATE('2021-11-16', 'YYYY-MM-DD'), '1-0');
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (3, 3, 4, 2, TO_DATE('2022-12-10', 'YYYY-MM-DD'), '0-3');
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (4, 1, 2, 4, TO_DATE('2023-01-05', 'YYYY-MM-DD'), '2-0');
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (5, 2, 1, 4, TO_DATE('2020-07-04', 'YYYY-MM-DD'), '1-2');
+
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (6, 2, 1, 4, TO_DATE('2023-04-04', 'YYYY-MM-DD'), '3-0');
+
+
+
+select * from Meciuri;
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (1, 'Coleman', 'Ronnie', 'America', 1);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (2, 'Waygu', 'Ho', 'Burundi', 2);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (3, 'Gaardy', 'Vlad', 'Olanda', 3);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (4, 'Collina', 'Pierluigi', 'Italia', 4);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (5, 'Craciunescu', 'Ion', 'Romania', 5);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (5, 'Kovacs', 'Istvan', 'Ungaria', 6);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (6, 'Hategan', 'Ovidiu', 'Romania', 6);
+
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (7, 'Kovacs', 'Istvan', 'Ungaria', 7);
+
+
+select * from arbitri;
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (1, 1, 1, 'Galben', 25);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (2, 2, 4, 'Rosu', 45);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (3, 2, 3, 'Galben', 30);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (4, 3, 1, 'Rosu', 1);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (5, 2, 3, 'Galben', 88);
+--rafa leao id 6 a luat rosu in meciu id 2 arbitrat de un arbitru portughez
+
+select * from cartonase;
+
+--6. Sa se memoreze si afiseze, pentru fiecare echipa, toti jucatorii nascuti dupa 1990
+
+CREATE OR REPLACE PROCEDURE ex_6 AS
+    TYPE jucatori IS RECORD (
+      nume VARCHAR2(100),
+      prenume VARCHAR2(100)
+    );           --tip de date record pentru a memora numele si prenumele
+    
+    TYPE jucator IS TABLE OF jucatori INDEX BY PLS_INTEGER;  --tablou indexat pentru a retine numele si prenumele fiecarui jucator
+    TYPE toti_jucatorii IS TABLE OF jucator;  --tablou imbricat pentru a retine jucatorii pentru fiecare echipa
+    players toti_jucatorii := toti_jucatorii();
+    nume_echipa ECHIPE.nume%type;
+BEGIN 
+    FOR i IN (SELECT id_echipa FROM ECHIPE) LOOP  --i va fi fiecare id al unei echipe in parte
+       players.DELETE;    --players se va reseta pentru fiecare echipa
+       FOR player IN (SELECT nume, prenume FROM jucatori WHERE id_echipa = i.id_echipa AND data_nasterii > TO_DATE('1990-01-01', 'YYYY-MM-DD')) LOOP
+             players.EXTEND;    --aplicarea conditiilor si adaugarea jucatorilor
+             players(players.COUNT)(players(players.COUNT).COUNT+1) := player;
+       END LOOP;
+       
+       SELECT nume
+       INTO nume_echipa
+       FROM ECHIPE e
+       WHERE i.id_echipa = e.id_echipa;  --variabila pentru stocarea echipei ca o sa fie afisata
+       
+       DBMS_OUTPUT.PUT_LINE(nume_echipa);
+       
+       FOR j IN 1..players.COUNT LOOP
+            DBMS_OUTPUT.PUT_LINE(players(j)(1).nume);     --afisarea numelui si a prenumelui
+            DBMS_OUTPUT.PUT_LINE(players(j)(1).prenume);  
+       END LOOP;
+    END LOOP; 
+END;
+/
+
+BEGIN
+    ex_6();
+END;
+
+--7 Sa se afiseze pentru fiecare echipa numele jucatorilor
+    CREATE OR REPLACE PROCEDURE ex_7 AS
+        Cursor teams is          --cursor care selecteaza id-ul fiecarei echipe
+            SELECT id_echipa
+            FROM ECHIPE;
+        
+        CURSOR players (echipa integer) is     --cursor parametrizat ce selecteaza in baza
+                                            --id-ului furnizat numele si prenumele jucatorilor
+            Select nume, prenume
+            FROM Jucatori
+            Where id_echipa = echipa;
+        team echipe.id_echipa%type;
+        nJuc jucatori.nume%type;
+        pJuc jucatori.prenume%type;       
+        team_name echipe.nume%type;
+BEGIN
+    for ech in teams LOOP
+        team := ech.id_echipa;
+                                  --se itereaza prin toate id_urile
+        Select nume into team_name FROM echipe where id_echipa = team; --se selecteaza numele echipei
+        DBMS_OUTPUT.PUT_LINE(team_name);
+        for var in players(team) LOOP      --se itereaza cu parametru id_ul echipei numele si prenumele fiecarui jucator
+             nJuc := var.nume;
+             pJuc := var.prenume;
+            DBMS_OUTPUT.PUT_LINE(nJuc);
+            DBMS_OUTPUT.PUT_LINE(pJuc);
+        END LOOP;
+    END LOOP;
+END;
+BEGIN
+     ex_7();                    --se apeleaza procedura
+END;
+--8  sa se afiseze echipele care au primit un cartonas galben in a doua repriza in timpul unui meci dat
+CREATE OR REPLACE FUNCTION ex_8(id_card INTEGER) RETURN VARCHAR2 IS  --se va primi prin id card id-ul meciului
+    exceptie_rosu EXCEPTION;
+    exceptie_prima_repriza EXCEPTION;
+    nume echipe.nume%TYPE;
+    tip_cartonas cartonase.tip_cartonas%TYPE;
+    timpul_acordarii cartonase.timpul_acordarii%TYPE;
+BEGIN
+    SELECT c.tip_cartonas, c.timpul_acordarii
+    INTO tip_cartonas, timpul_acordarii   --se vor selecta tipul si timpul acordarii cartonasului
+    FROM cartonase c
+    WHERE c.id_cartonas = id_card;
+
+    IF tip_cartonas = 'Rosu' THEN
+        RAISE exceptie_rosu;
+    ELSIF timpul_acordarii < 45 THEN   --se vor verifica cele 2 conditii impuse de cerinta, ulterior intrandu-se in exceptie
+                                        --daca nu se indeplinesc
+        RAISE exceptie_prima_repriza;
+    ELSE
+        SELECT e.nume
+        INTO nume
+        FROM cartonase c, meciuri m, echipe e   --se vor utiliza trei tabele
+        WHERE c.id_cartonas = id_card and c.id_meci = m.id_meci and m.id_oaspete = e.id_echipa ;
+
+        RETURN nume;     --se va returna numele echipei
+    END IF;
+EXCEPTION
+    WHEN exceptie_rosu THEN
+        RETURN 'Cartonasul a fost rosu';           --se vor returna mesaje aferente exceptiilor
+    
+    WHEN exceptie_prima_repriza THEN
+        RETURN 'Cartonasul a fost in prima repriza';
+    
+END;
+ 
+ BEGIN
+ DBMS_OUTPUT.PUT_LINE(ex_8(1));
+ DBMS_OUTPUT.PUT_LINE(ex_8(2));
+ DBMS_OUTPUT.PUT_LINE(ex_8(3));
+ DBMS_OUTPUT.PUT_LINE(ex_8(4));
+ DBMS_OUTPUT.PUT_LINE(ex_8(5));
+ END;
+--  arbitri, meci, jucator, cartonas, echipa
+-- jucator care a obtinut rosu de la un arbitru de aceeasi natie cand echipa sa juca in deplasare
+UPDATE jucatori
+SET nationalitate = 'Romania'
+WHERE id_jucator = 1;
+
+UPDATE jucatori
+SET nationalitate = 'Romania'
+WHERE id_jucator = 2;
+
+UPDATE jucatori
+SET nationalitate = 'Egipt'
+WHERE id_jucator = 4;
+
+UPDATE jucatori
+SET nationalitate = 'Anglia'
+WHERE id_jucator = 5;
+    
+    UPDATE jucatori
+SET nationalitate = 'Portugalia'
+WHERE id_jucator = 6;
+    
+    UPDATE jucatori
+SET nationalitate = 'Olanda'
+WHERE id_jucator = 7;
+    
+    UPDATE jucatori
+SET nationalitate = 'Maroc'
+WHERE id_jucator = 8;
+    
+INSERT INTO Meciuri (ID_Meci, ID_Gazda, ID_Oaspete, ID_Competitie, Data, Scor)
+VALUES (6, 2, 1, 4, TO_DATE('2023-04-04', 'YYYY-MM-DD'), '3-0');    
+    
+INSERT INTO Arbitri (ID_Arbitru, Nume, Prenume, Tara, ID_Meci)
+VALUES (6, 'Hategan', 'Ovidiu', 'Romania', 6);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (6, 6, 1, 'Rosu', 78);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (7, 6, 2, 'Rosu', 60);
+
+INSERT INTO Cartonase (ID_Cartonas, ID_Meci, ID_Jucator, Tip_cartonas, Timpul_acordarii)
+VALUES (8, 2, 6, 'Rosu', 10);
+
+UPDATE arbitri
+SET  = 'Portugalia'
+WHERE id_arbitru = 2;
+    
+CREATE OR REPLACE PROCEDURE ex_09(nationalitate_param IN VARCHAR2) IS
+  nume jucatori.nume%type;
+  CURSOR c_jucatori IS      --cursor care selectează numele jucătorului
+    SELECT DISTINCT j.nume AS nume_jucator
+    FROM jucatori j, echipe e, meciuri m, cartonase c, arbitri a
+    WHERE m.id_meci = c.id_meci and c.id_meci = a.id_meci and m.id_oaspete = e.id_echipa
+          and j.id_echipa = e.id_echipa and j.nationalitate = a.tara and j.nationalitate = nationalitate_param and c.tip_cartonas = 'Rosu';  --condițiile aplicate
+  jucator_count NUMBER := 0;
+  prea_multi EXCEPTION;  --definirea de excepții
+  niciunul EXCEPTION;
+BEGIN
+  OPEN c_jucatori;
+  LOOP
+    FETCH c_jucatori INTO nume;  -- nume va lua valoarea rezultatelor
+    EXIT WHEN c_jucatori%NOTFOUND; 
+    jucator_count := jucator_count + 1;    --un contor care să ajute la lansarea excepțiilor
+  END LOOP;
+  
+  CLOSE c_jucatori;
+  
+  IF jucator_count = 0 THEN         --daca nu a fost gasit niciun jucator se va afisa un mesaj aferent
+    RAISE niciunul;
+  ELSIF jucator_count > 1 THEN   --asemenea in cazul in care sunt mai multi jucatori
+    RAISE prea_multi;
+  ELSE 
+    DBMS_OUTPUT.PUT_LINE (nume);
+  END IF;
+EXCEPTION 
+  WHEN niciunul THEN
+    DBMS_OUTPUT.PUT_LINE ('Nu exista un astfel de jucator');
+  WHEN prea_multi THEN
+    DBMS_OUTPUT.PUT_LINE ('Exista mai multi jucatori'); 
+END;
+/
+DECLARE
+
+BEGIN
+  ex_09('Portugalia');    --exista un singur caz, Leao
+  ex_09('Romania');     --sunt doua cazuri, Chipirliu si Mihaescu 
+  ex_09('Albania');   -- niciun caz
+END;
+
+
+--10 
+
+CREATE OR REPLACE TRIGGER ex_10
+BEFORE INSERT OR UPDATE OR DELETE ON Competitii
+DECLARE
+  nr NUMBER;
+BEGIN
+  IF INSERTING OR UPDATING THEN
+    -- Verific?m dac? exist? înregistr?ri în tabelul Competitii
+    SELECT COUNT(*) INTO nr FROM Competitii;
+    IF nr = 7 THEN
+      RAISE_APPLICATION_ERROR(-20001,'Prea multe competitii');
+    END IF;
+  ELSIF DELETING THEN
+    -- Verific?m dac? mai exist? înregistr?ri în tabelul Competitii dup? ?tergere
+    SELECT COUNT(*) INTO nr FROM Competitii;
+    IF nr = 7 THEN
+      RAISE_APPLICATION_ERROR(-20002, 'Prea multe competitii');
+    END IF;
+  END IF;
+END;
+INSERT INTO Competitii (ID_Competitie, Nume, Tara, Sezon, Numar_etape)
+VALUES (8, 'comp', 'Senegal', '2020-2021', 15);
+--11 la nivel de linie
+CREATE OR REPLACE TRIGGER ex_11
+BEFORE INSERT ON ECHIPE
+FOR EACH ROW
+BEGIN
+  IF :NEW.Antrenor = 'Cristi Pustai' THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Antrenorul este suspendat');
+  END IF;
+END;
+INSERT INTO Echipe (ID_Echipa, Nume, Tara, Antrenor)
+VALUES (8, 'Wydad Cassablanca', 'Maroc', 'Cristi Pustai');
+select * from echipe;
+
+
+
+
+
+
+
+/
+--12 Creati un trigger LDD care sa afiseze numele tabelului creat
+CREATE OR REPLACE TRIGGER ex_12
+AFTER CREATE ON SCHEMA
+DECLARE
+  tabel VARCHAR2(100);
+BEGIN
+  tabel := ora_dict_obj_name;
+  DBMS_OUTPUT.PUT_LINE(tabel);
+END; 
+
+
+CREATE TABLE ex_12 (EX varchar2(100));
+
+CREATE OR REPLACE PACKAGE ex_13 AS
+    
+    PROCEDURE ex_6;
+
+    
+    PROCEDURE ex_7;
+
+    
+    FUNCTION ex_8(id_card INTEGER) RETURN VARCHAR2;
+    
+  
+    PROCEDURE ex_9(nationalitate_param IN VARCHAR2);
+END ex_13;
+/
+
+CREATE OR REPLACE PACKAGE ex_13 AS
+   
+    PROCEDURE ex_6;
+
+    PROCEDURE ex_7;
+
+  
+    FUNCTION ex_8(id_card INTEGER) RETURN VARCHAR2;
+    
+   
+    PROCEDURE ex_9(nationalitate_param IN VARCHAR2);
+END ex_13;
+/
+
+CREATE OR REPLACE PACKAGE BODY ex_13 AS
+    
+    PROCEDURE ex_6 AS
+        TYPE jucatori IS RECORD (
+          nume VARCHAR2(100),
+          prenume VARCHAR2(100)
+        );
+    
+        TYPE jucator IS TABLE OF jucatori INDEX BY PLS_INTEGER;
+        TYPE toti_jucatorii IS TABLE OF jucator;
+        
+        players toti_jucatorii := toti_jucatorii();
+        nume_echipa ECHIPE.nume%TYPE;
+    BEGIN 
+        FOR i IN (SELECT id_echipa FROM ECHIPE) LOOP
+           players.DELETE;
+           FOR player IN (SELECT nume, prenume FROM jucatori WHERE id_echipa = i.id_echipa AND data_nasterii > TO_DATE('1990-01-01', 'YYYY-MM-DD')) LOOP
+                 players.EXTEND;
+                 players(players.COUNT)(players(players.COUNT).COUNT+1) := player;
+           END LOOP;
+           
+           SELECT nume INTO nume_echipa
+           FROM ECHIPE e
+           WHERE i.id_echipa = e.id_echipa;
+           
+           DBMS_OUTPUT.PUT_LINE(nume_echipa);
+           
+           FOR j IN 1..players.COUNT LOOP
+                DBMS_OUTPUT.PUT_LINE(players(j)(1).nume);
+                DBMS_OUTPUT.PUT_LINE(players(j)(1).prenume);
+           END LOOP;
+        END LOOP; 
+    END ex_6;
+
+   
+    PROCEDURE ex_7 AS
+        CURSOR teams IS
+            SELECT id_echipa
+            FROM ECHIPE;
+        
+        CURSOR players (echipa INTEGER) IS
+            SELECT nume, prenume
+            FROM Jucatori
+            WHERE id_echipa = echipa;
+        
+        team echipe.id_echipa%TYPE;
+        nJuc jucatori.nume%TYPE;
+        pJuc jucatori.prenume%TYPE;
+        team_name echipe.nume%TYPE;
+    BEGIN
+        FOR ech IN teams LOOP
+            team := ech.id_echipa;
+            SELECT nume INTO team_name FROM echipe WHERE id_echipa = team;
+            DBMS_OUTPUT.PUT_LINE(team_name);
+            
+            FOR var IN players(team) LOOP
+                 nJuc := var.nume;
+                 pJuc := var.prenume;
+                DBMS_OUTPUT.PUT_LINE(nJuc);
+                DBMS_OUTPUT.PUT_LINE(pJuc);
+            END LOOP;
+        END LOOP;
+    END ex_7;
+
+   
+    FUNCTION ex_8(id_card INTEGER) RETURN VARCHAR2 IS
+        exceptie_rosu EXCEPTION;
+        exceptie_prima_repriza EXCEPTION;
+        nume echipe.nume%TYPE;
+        tip_cartonas cartonase.tip_cartonas%TYPE;
+        timpul_acordarii cartonase.timpul_acordarii%TYPE;
+    BEGIN
+        SELECT c.tip_cartonas, c.timpul_acordarii
+        INTO tip_cartonas, timpul_acordarii
+        FROM cartonase c
+        WHERE c.id_cartonas = id_card;
+    
+        IF tip_cartonas = 'Rosu' THEN
+            RAISE exceptie_rosu;
+        ELSIF timpul_acordarii < 45 THEN
+            RAISE exceptie_prima_repriza;
+        ELSE
+            SELECT e.nume
+            INTO nume
+            FROM cartonase c, meciuri m, echipe e
+            WHERE c.id_cartonas = id_card AND c.id_meci = m.id_meci AND m.id_oaspete = e.id_echipa;
+    
+            RETURN nume;
+        END IF;
+    EXCEPTION
+        WHEN exceptie_rosu THEN
+            RETURN 'Cartonasul a fost rosu';
+    
+        WHEN exceptie_prima_repriza THEN
+            RETURN 'Cartonasul a fost in prima repriza';
+    END ex_8;
+
+   
+    PROCEDURE ex_9(nationalitate_param IN VARCHAR2) IS
+        nume jucatori.nume%TYPE;
+        CURSOR c_jucatori IS
+            SELECT DISTINCT j.nume AS nume_jucator
+            FROM jucatori j, echipe e, meciuri m, cartonase c, arbitri a
+            WHERE m.id_meci = c.id_meci AND c.id_meci = a.id_meci AND m.id_oaspete = e.id_echipa
+                  AND j.id_echipa = e.id_echipa AND j.nationalitate = a.tara AND j.nationalitate = nationalitate_param AND c.tip_cartonas = 'Rosu';
+        jucator_count NUMBER := 0;
+        prea_multi EXCEPTION;
+        niciunul EXCEPTION;
+    BEGIN
+        OPEN c_jucatori;
+        LOOP
+            FETCH c_jucatori INTO nume;
+            EXIT WHEN c_jucatori%NOTFOUND;
+            jucator_count := jucator_count + 1;
+        END LOOP;
+        
+        CLOSE c_jucatori;
+        
+        IF jucator_count = 0 THEN
+            RAISE niciunul;
+        ELSIF jucator_count > 1 THEN
+            RAISE prea_multi;
+        ELSE 
+            DBMS_OUTPUT.PUT_LINE(nume);
+        END IF;
+    EXCEPTION 
+        WHEN niciunul THEN
+            DBMS_OUTPUT.PUT_LINE('Nu exista un astfel de jucator');
+        WHEN prea_multi THEN
+            DBMS_OUTPUT.PUT_LINE('Exista mai multi jucatori'); 
+    END ex_9;
+END ex_13;
+/
+BEGIN
+    ex_13.ex_6();
+    ex_13.ex_7();
+    DBMS_OUTPUT.PUT_LINE(ex_13.ex_8(1));
+    DBMS_OUTPUT.PUT_LINE(ex_13.ex_8(2));
+    DBMS_OUTPUT.PUT_LINE(ex_13.ex_8(3));
+    DBMS_OUTPUT.PUT_LINE(ex_13.ex_8(4));
+    DBMS_OUTPUT.PUT_LINE(ex_13.ex_8(5));
+    ex_13.ex_9('Portugalia');
+    ex_13.ex_9('Romania');
+    ex_13.ex_9('Albania');
+END;
+
+
+
+
